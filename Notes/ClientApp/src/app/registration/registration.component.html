@@ -6,15 +6,19 @@
       </div>
       <div class="form-group row">
         <label class="col-sm-3 col-form-label">Login:</label>
-        <input class="form-control col-sm-6" [(ngModel)]="login" placeholder="Login">
+        <input class="form-control col-sm-6" [(ngModel)]="login" placeholder="Login" required>
       </div>
       <div class="form-group row">
         <label class="col-sm-3 col-form-label">Email:</label>
-        <input class="form-control col-sm-6" [(ngModel)]="email" placeholder="Email">
+        <input type ="email" class="form-control col-sm-6" [(ngModel)]="email" placeholder="Email" required>
       </div>
       <div class="form-group row mb-4">
         <label class="col-sm-3 col-form-label">Password:</label>
-        <input class="form-control col-sm-6" [(ngModel)]="password" placeholder="Password">
+        <input type="password" class="form-control col-sm-6" [(ngModel)]="password" placeholder="Password"
+               required minlength="6" aria-describedby="passwordHelpInline">
+        <small id="passwordHelpInline" class="text-muted mx-auto">
+          Must be 6-20 characters long.
+        </small>
       </div>
       <div class="form-group row">
         <div class="col-sm-3"></div>
