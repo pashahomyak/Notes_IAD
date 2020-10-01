@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DataService} from "../_services/data.service";
 import {User} from "../_models/user.model";
 import {Router, RouterLink, ActivatedRoute} from "@angular/router";
+import { ServiceResponce } from '../_models/service-responce.model';
 
 @Component({
   selector: 'app-registration',
@@ -14,14 +15,14 @@ export class RegistrationComponent implements OnInit {
   email: string;
   password: string;
 
-  isRegistered: boolean;
+  responceIsReceived: boolean;
 
-  postResult: string;
+  serviceResponce: ServiceResponce;
 
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.isRegistered = false;
+    this.responceIsReceived = false;
   }
 
   signUp() {
@@ -31,18 +32,10 @@ export class RegistrationComponent implements OnInit {
       let user: User = new User(this.login, this.password, this.email);
 
       this.dataService.getData("signUp", user)
-        .subscribe((data: string) => this.postResult = data);
+        .subscribe((data: ServiceResponce) => this.serviceResponce = data);
 
-      console.log(this.postResult);
-
-      if (this.postResult == "loginExist") {
-        //error
-        this.isRegistered = false;
-      } else {
-        //ok
-        this.isRegistered = true;
-        //this.router.navigate([''], { relativeTo: this.route });
-      }
+      //this.router.navigate([''], { relativeTo: this.route });
+      this.responceIsReceived = true;
     }
   }
 }

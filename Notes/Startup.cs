@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Notes.Data;
 using Notes.Models;
 
 namespace Notes
@@ -31,6 +32,8 @@ namespace Notes
 
             services.AddDbContext<NotesContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("NotesDatabase")));
+
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

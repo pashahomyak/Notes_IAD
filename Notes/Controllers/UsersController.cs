@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Notes.Data;
 using Notes.Dto;
 using Notes.Models;
 
@@ -16,49 +17,21 @@ namespace Notes.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly NotesContext _context;
+        private readonly IAuthRepository _authRepo;
 
-        public UsersController(NotesContext context)
+        public UsersController(IAuthRepository authRepo)
         {
-            _context = context;
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
-        {
-            var user = await _context.User.FindAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return user;
+            _authRepo = authRepo;
         }
 
         [HttpPost("signUp")]
         public async Task<ActionResult> SignUp(UserDto userDto)
         {
-            if (await UserExists(userDto.Login))
-            {
-                return Ok("loginExist");
-            }
-            
-            User user = new User();
-            user.Login = userDto.Login;
-            user.Email = userDto.Email;
-            
-            string password = userDto.Password;
-            string saltedHash = GetPasswordHash(password);
-            user.Password = saltedHash;
-            
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
-            
-            //добавить сохранение в куки
+            ServiceResponce serviceResponce = await _authRepo.Register(userDto);
+
             Response.Cookies.Append(
                 "Login",
-                (user.Login).ToString(),
+                (userDto.Login).ToString(),
                 new CookieOptions()
                 {
                     Path = "/",
@@ -67,7 +40,7 @@ namespace Notes.Controllers
                 });
             Response.Cookies.Append(
                 "Password",
-                (saltedHash).ToString(),
+                (userDto.Password).ToString(),
                 new CookieOptions()
                 {
                     Path = "/",
@@ -75,30 +48,46 @@ namespace Notes.Controllers
                     Secure = false
                 });
 
-            return Ok();
+            return Ok(serviceResponce);
         }
 
-        private async Task<bool> UserExists(string login)
+        [HttpPost("signIn")]
+        public async Task<ActionResult> SignIn(UserDto userDto)
         {
-            if (await _context.User.AnyAsync(e => e.Login.ToLower() == login.ToLower()))
+            ServiceResponce serviceResponce = await _authRepo.Login(userDto.Login, userDto.Password);
+
+            if (serviceResponce.Success)
             {
-                return true;
+                Response.Cookies.Append(
+                "IdUser",
+                (serviceResponce.Id).ToString(),
+                new CookieOptions()
+                {
+                    Path = "/",
+                    HttpOnly = false,
+                    Secure = false
+                });
+                Response.Cookies.Append(
+                "Login",
+                (userDto.Login).ToString(),
+                new CookieOptions()
+                {
+                    Path = "/",
+                    HttpOnly = false,
+                    Secure = false
+                });
+                Response.Cookies.Append(
+                "Password",
+                (userDto.Password).ToString(),
+                new CookieOptions()
+                {
+                    Path = "/",
+                    HttpOnly = false,
+                    Secure = false
+                });
             }
-            return false;
-        }
-        
-        private string GetPasswordHash(string inputPassword)
-        {
-            var md5 = MD5.Create();
-            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(inputPassword));
 
-            byte[] salt = Encoding.UTF8.GetBytes("sflp49f2");
-
-            hash.Concat(salt);
-
-            string saltedHash = Convert.ToBase64String(md5.ComputeHash(hash));
-
-            return saltedHash;
+            return Ok(serviceResponce);
         }
     }
 }

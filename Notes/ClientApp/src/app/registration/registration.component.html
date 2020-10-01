@@ -24,12 +24,15 @@
         </div>
       </div>
 
-      <div *ngIf="isRegistered" class="alert alert-success" role="alert">
-        Registration was successful!
+      <div *ngIf="responceIsReceived">
+        <div *ngIf="serviceResponce.success" class="alert alert-success" role="alert">
+          {{serviceResponce.message}}
+        </div>
+        <div *ngIf="!serviceResponce.success" class="alert alert-danger" role="alert">
+          {{serviceResponce.message}}
+        </div>
       </div>
-      <div *ngIf="postResult != null && !isRegistered" class="alert alert-danger" role="alert">
-        Registration error!
-      </div>
+      
 
     </div>
   </div>
