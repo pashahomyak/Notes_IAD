@@ -1,0 +1,15 @@
+﻿.main-card
+{
+  width: 50%;
+  margin: auto;
+}
+
+.main-text
+{
+  margin-bottom: 50px;
+}
+
+.largeButton {
+  padding: 0.5rem 4rem;
+  font-size: 1.25rem;
+}
