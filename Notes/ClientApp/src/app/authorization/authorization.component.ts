@@ -37,4 +37,8 @@ export class AuthorizationComponent implements OnInit {
       this.responceIsReceived = true;
     }
   }
+
+  saveToken() {
+    localStorage.setItem("token", this.serviceResponce.data);
+  }
 }

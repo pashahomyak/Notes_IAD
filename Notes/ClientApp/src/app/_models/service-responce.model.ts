@@ -1,6 +1,6 @@
 export class ServiceResponce {
   constructor(
-    public id: number,
+    public data: string,
     public message: string,
     public success: boolean
   ) { }

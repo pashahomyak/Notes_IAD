@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Notes.Dto;
 using Notes.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,31 +17,38 @@ namespace Notes.Data
     public class AuthRepository : IAuthRepository
     {
         private readonly NotesContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthRepository (NotesContext context)
+        public AuthRepository (NotesContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
-        
+
+        public User GetById(int id)
+        {
+            return _context.User.Find(id);
+        }
+
         public async Task<ServiceResponce> Login(string login, string password)
         {
             ServiceResponce serviceResponce = new ServiceResponce();
             User user = await _context.User.FirstOrDefaultAsync(x => x.Login.ToLower().Equals(login.ToLower()));
             if (user == null)
             {
-                serviceResponce.Success = false;
-                serviceResponce.Message = "User not found.";
+                serviceResponce.success = false;
+                serviceResponce.message = "User not found.";
             }
             else if (!VerifyPassword(password, user.Password))
             {
-                serviceResponce.Success = false;
-                serviceResponce.Message = "Wrong password.";
+                serviceResponce.success = false;
+                serviceResponce.message = "Wrong password.";
             }
             else
             {
-                serviceResponce.Id = user.IdUser;
-                serviceResponce.Success = true;
-                serviceResponce.Message = "Authorization was successful.";
+                serviceResponce.data = CreateToken(user);
+                serviceResponce.success = true;
+                serviceResponce.message = "Authorization was successful.";
             }
 
             return serviceResponce;
@@ -49,8 +60,8 @@ namespace Notes.Data
 
             if (await UserExists(userDto.Login))
             {
-                serviceResponce.Success = false;
-                serviceResponce.Message = "User already exists.";
+                serviceResponce.success = false;
+                serviceResponce.message = "User already exists.";
                 return serviceResponce;
             }
 
@@ -65,8 +76,9 @@ namespace Notes.Data
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            serviceResponce.Success = true;
-            serviceResponce.Message = "Registration was successful.";
+            serviceResponce.data = CreateToken(user);
+            serviceResponce.success = true;
+            serviceResponce.message = "Registration was successful.";
 
             return serviceResponce;
         }
@@ -104,6 +116,33 @@ namespace Notes.Data
             {
                 return false;
             }
+        }
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+                new Claim(ClaimTypes.Name, user.Login),
+                new Claim(ClaimTypes.Hash, user.Password)
+            };
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value)
+            );
+
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            
+            return tokenHandler.WriteToken(token);
         }
     }
 }

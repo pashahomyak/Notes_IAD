@@ -7,8 +7,8 @@ namespace Notes.Data
 {
     public class ServiceResponce
     {
-       public int Id { get; set; }
-        public string Message { get; set; }
-        public bool Success { get; set; }
+        public string data { get; set; }
+        public string message { get; set; }
+        public bool success { get; set; }
     }
 }

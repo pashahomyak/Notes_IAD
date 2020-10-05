@@ -1,4 +1,4 @@
-<div class="container border-left border-right">
+<div class="container pt-3">
   <div class="row justify-content-center">
     <div class="col-sm mx-auto px-4 py-4 border rounded">
       <div class="border-bottom text-center my-3">
@@ -23,6 +23,7 @@
       <div *ngIf="responceIsReceived">
         <div *ngIf="serviceResponce.success" class="alert alert-success" role="alert">
           {{serviceResponce.message}}
+          {{saveToken()}}
         </div>
         <div *ngIf="!serviceResponce.success" class="alert alert-danger" role="alert">
           {{serviceResponce.message}}
