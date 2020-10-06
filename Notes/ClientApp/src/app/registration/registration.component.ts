@@ -26,16 +26,18 @@ export class RegistrationComponent implements OnInit {
   }
 
   signUp() {
-    if (this.login == "" || this.password == "" || this.email == "") {
-      //error
-    } else {
-      let user: User = new User(this.login, this.password, this.email);
+    let user: User = new User(this.login, this.password, this.email);
 
-      this.dataService.getData("signUp", user)
-        .subscribe((data: ServiceResponce) => this.serviceResponce = data);
+    this.dataService.getData("signUp", user)
+      .subscribe((data: ServiceResponce) => {
+        this.serviceResponce = data;
+      });
 
-      //this.router.navigate([''], { relativeTo: this.route });
-      this.responceIsReceived = true;
-    }
+    //this.router.navigate([''], { relativeTo: this.route });
+    this.responceIsReceived = true;
+  }
+
+  saveToken() {
+    localStorage.setItem("token", this.serviceResponce.data);
   }
 }

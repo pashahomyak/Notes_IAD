@@ -1,4 +1,4 @@
-<div class="container border-left border-right">
+<div class="container pt-3">
   <div class="row justify-content-center">
     <div class="col-sm mx-auto px-4 py-4 border rounded">
       <div class="border-bottom text-center my-3">
@@ -23,7 +23,7 @@
       <div class="form-group row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6 disablePadding">
-          <button class="btn btn-primary float-left" (click)="signUp()">Sign Up</button>
+          <button class="btn btn-primary float-left" (click)="signUp(); saveToken()">Sign Up</button>
           <a [routerLink]="['']" class="btn btn-primary px-6 largeButton float-right">Back</a>
         </div>
       </div>
@@ -31,12 +31,13 @@
       <div *ngIf="responceIsReceived">
         <div *ngIf="serviceResponce.success" class="alert alert-success" role="alert">
           {{serviceResponce.message}}
+          {{saveToken()}}
         </div>
         <div *ngIf="!serviceResponce.success" class="alert alert-danger" role="alert">
           {{serviceResponce.message}}
         </div>
       </div>
-      
+
 
     </div>
   </div>

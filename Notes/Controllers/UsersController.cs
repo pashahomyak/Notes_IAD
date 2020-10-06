@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,25 +30,6 @@ namespace Notes.Controllers
         {
             ServiceResponce serviceResponce = await _authRepo.Register(userDto);
 
-            Response.Cookies.Append(
-                "Login",
-                (userDto.Login).ToString(),
-                new CookieOptions()
-                {
-                    Path = "/",
-                    HttpOnly = false,
-                    Secure = false
-                });
-            Response.Cookies.Append(
-                "Password",
-                (userDto.Password).ToString(),
-                new CookieOptions()
-                {
-                    Path = "/",
-                    HttpOnly = false,
-                    Secure = false
-                });
-
             return Ok(serviceResponce);
         }
 
@@ -55,37 +37,6 @@ namespace Notes.Controllers
         public async Task<ActionResult> SignIn(UserDto userDto)
         {
             ServiceResponce serviceResponce = await _authRepo.Login(userDto.Login, userDto.Password);
-
-            if (serviceResponce.Success)
-            {
-                Response.Cookies.Append(
-                "IdUser",
-                (serviceResponce.Id).ToString(),
-                new CookieOptions()
-                {
-                    Path = "/",
-                    HttpOnly = false,
-                    Secure = false
-                });
-                Response.Cookies.Append(
-                "Login",
-                (userDto.Login).ToString(),
-                new CookieOptions()
-                {
-                    Path = "/",
-                    HttpOnly = false,
-                    Secure = false
-                });
-                Response.Cookies.Append(
-                "Password",
-                (userDto.Password).ToString(),
-                new CookieOptions()
-                {
-                    Path = "/",
-                    HttpOnly = false,
-                    Secure = false
-                });
-            }
 
             return Ok(serviceResponce);
         }

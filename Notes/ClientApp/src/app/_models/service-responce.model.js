@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ServiceResponce = /** @class */ (function () {
-    function ServiceResponce(id, message, success) {
-        this.id = id;
+    function ServiceResponce(data, message, success) {
+        this.data = data;
         this.message = message;
         this.success = success;
     }

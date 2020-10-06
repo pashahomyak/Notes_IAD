@@ -9,6 +9,8 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AuthorizationComponent } from './authorization/authorization.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { ProfileComponent } from './profile/profile.component';
+import {AuthGuardService} from "./_services/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -16,7 +18,8 @@ import { RegistrationComponent } from './registration/registration.component';
     NavMenuComponent,
     HomeComponent,
     AuthorizationComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -25,7 +28,12 @@ import { RegistrationComponent } from './registration/registration.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'authorization', component: AuthorizationComponent},
-      { path: 'registration', component: RegistrationComponent}
+      { path: 'registration', component: RegistrationComponent},
+      { path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuardService]
+      },
+      { path: '**', redirectTo: '' }
     ])
   ],
   providers: [],
