@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {AuthService} from "./_services/auth.service";
-// @ts-ignore
-import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -16,6 +14,9 @@ import { ProfileComponent } from './profile/profile.component';
 import {AuthGuardService as AuthGuard} from "./_services/auth-guard.service";
 import {JwtModuleOptions, JwtHelperService, JwtModule, JWT_OPTIONS} from "@auth0/angular-jwt";
 
+export function tokenGetter() {
+  return localStorage.getItem("token");
+}
 
 @NgModule({
   declarations: [
@@ -29,9 +30,12 @@ import {JwtModuleOptions, JwtHelperService, JwtModule, JWT_OPTIONS} from "@auth0
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
-    HttpModule,
-    // @ts-ignore
-    JwtModule.forRoot(JWT_OPTIONS),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:44323"]
+      }
+    }),
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
