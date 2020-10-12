@@ -144,5 +144,13 @@ namespace Notes.Data
             
             return tokenHandler.WriteToken(token);
         }
+        private JwtSecurityToken GetDecodedToken(string inputToken)
+        {
+            var jwt = inputToken;
+            var handler = new JwtSecurityTokenHandler();
+            var resultToken = handler.ReadJwtToken(jwt);
+
+            return resultToken;
+        }
     }
 }

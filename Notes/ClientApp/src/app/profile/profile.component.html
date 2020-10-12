@@ -1,13 +1,24 @@
 <div class="container pt-3">
-  <div class="row border-bottom">
-    <h1>Profile</h1>
-  </div>
-  <div class="row">
-    <div class="col">
-      <span>Login</span>
-    </div>
-    <div class="col">
-      <span>LoginText</span>
+  <div class="row justify-content-center">
+    <div class="col-sm mx-auto px-4 py-4 border rounded">
+      <div class="border-bottom text-center my-3">
+        <h3>Profile</h3>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label">Login:</label>
+        <input class="form-control col-sm-6" [(ngModel)]="login" disabled>
+      </div>
+      <div class="form-group row mb-4">
+        <label class="col-sm-3 col-form-label">Email:</label>
+        <input class="form-control col-sm-6" [(ngModel)]="email" disabled>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 disablePadding">
+          <button class="btn btn-primary float-left" (click)="changeEmail()">Change Email</button>
+          <button class="btn btn-primary float-right" (click)="changePassword()">Change Password</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

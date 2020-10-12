@@ -6,10 +6,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  login: string;
+  email: string;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  changeEmail() {
+
+  }
+
+  changePassword() {
+
+  }
 }
