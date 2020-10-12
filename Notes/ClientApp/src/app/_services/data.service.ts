@@ -7,9 +7,9 @@ export class DataService {
   constructor(private http: HttpClient) {
   }
 
-  getData(myUrl: string, user) {
+  getData(myUrl: string, data) {
     let url: string = "/users/" + myUrl;
 
-    return this.http.post(url, user);
+    return this.http.post(url, data);
   }
 }

@@ -29,7 +29,6 @@ namespace Notes.Data
         {
             return _context.User.Find(id);
         }
-
         public async Task<ServiceResponce> Login(string login, string password)
         {
             ServiceResponce serviceResponce = new ServiceResponce();
@@ -53,7 +52,6 @@ namespace Notes.Data
 
             return serviceResponce;
         }
-
         public async Task<ServiceResponce> Register(UserDto userDto)
         {
             ServiceResponce serviceResponce = new ServiceResponce();
@@ -91,6 +89,8 @@ namespace Notes.Data
 
             return false;
         }
+        
+        
         private string GetPasswordHash(string inputPassword)
         {
             var md5 = MD5.Create();
@@ -151,6 +151,21 @@ namespace Notes.Data
             var resultToken = handler.ReadJwtToken(jwt);
 
             return resultToken;
+        }
+        
+        public async Task<UserDto> GetProfileData(string inputToken)
+        {
+            JwtSecurityToken decodedToken = GetDecodedToken(inputToken);
+
+            User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
+
+            UserDto userDto = new UserDto
+            {
+                Email = user.Email,
+                Login = user.Login
+            };
+
+            return userDto;
         }
     }
 }

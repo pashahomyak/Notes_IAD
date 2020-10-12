@@ -40,5 +40,13 @@ namespace Notes.Controllers
 
             return Ok(serviceResponce);
         }
+        
+        [HttpPost("getProfileData")]
+        public async Task<ActionResult> GetProfileData(TokenDto tokenDto)
+        {
+            UserDto userDto = await _authRepo.GetProfileData(tokenDto.Data);
+
+            return Ok(userDto);
+        }
     }
 }
