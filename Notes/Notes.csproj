@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\material.module.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_models\service-responce.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_models\token.model.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\_services\auth-guard.service.ts" />

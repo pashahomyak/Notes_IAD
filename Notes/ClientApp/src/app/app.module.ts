@@ -13,6 +13,10 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ProfileComponent } from './profile/profile.component';
 import {AuthGuardService as AuthGuard} from "./_services/auth-guard.service";
 import {JwtModuleOptions, JwtHelperService, JwtModule, JWT_OPTIONS} from "@auth0/angular-jwt";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material.module';
+import { DialogElementsEmailComponent } from './dialog-elements-email/dialog-elements-email.component';
+import { DialogElementsPasswordComponent } from './dialog-elements-password/dialog-elements-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -25,7 +29,9 @@ export function tokenGetter() {
     HomeComponent,
     AuthorizationComponent,
     RegistrationComponent,
-    ProfileComponent
+    ProfileComponent,
+    DialogElementsEmailComponent,
+    DialogElementsPasswordComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -46,8 +52,11 @@ export function tokenGetter() {
         canActivate: [AuthGuard]
       },
       { path: '**', redirectTo: '' }
-    ])
+    ]),
+    BrowserAnimationsModule,
+    MaterialModule
   ],
+  entryComponents: [DialogElementsEmailComponent, DialogElementsPasswordComponent],
   providers: [
     AuthGuard,
     AuthService,
