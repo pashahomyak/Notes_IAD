@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
   }
   changeEmail() {
     this.dialog.open(DialogElementsEmailComponent, {
-      height: '400px',
+      //height: '400px',
       width: '600px',
     });
   }

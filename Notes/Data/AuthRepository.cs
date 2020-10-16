@@ -167,5 +167,15 @@ namespace Notes.Data
 
             return userDto;
         }
+
+        public async Task<ServiceResponce> ChangeEmail(string inputToken)
+        {
+            JwtSecurityToken decodedToken = GetDecodedToken(inputToken);
+
+            User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
+            
+            //добавить ModificationDto {token, oldValue, newValue}
+            //https://www.entityframeworktutorial.net/efcore/update-data-in-entity-framework-core.aspx
+        }
     }
 }

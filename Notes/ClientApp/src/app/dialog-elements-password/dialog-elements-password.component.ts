@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dialog-elements-password.component.css']
 })
 export class DialogElementsPasswordComponent implements OnInit {
+  oldPassword: any;
+  newPassword: any;
 
   constructor() { }
 

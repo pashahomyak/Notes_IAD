@@ -14,7 +14,7 @@ namespace Notes.Data
         Task<ServiceResponce> Register(UserDto userDto);
         Task<ServiceResponce> Login(string login, string password);
         Task<bool> UserExists(string login);
-
         Task<UserDto> GetProfileData(string inputToken);
+        Task<ServiceResponce> ChangeEmail(string inputToken);
     }
 }

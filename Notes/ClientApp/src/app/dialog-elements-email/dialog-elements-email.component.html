@@ -1,5 +1,22 @@
-<h1 mat-dialog-title>Dialog with elements</h1>
-<div mat-dialog-content>This dialog showcases the title, close, content and actions elements.</div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Close</button>
+<div class="row justify-content-center">
+  <div class="col-sm mx-auto px-4 py-4 border rounded">
+    <div class="border-bottom text-center my-3">
+      <h3>Change Email</h3>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Email:</label>
+      <input [(ngModel)]="oldEmail" type ="email" class="form-control col-sm-6" placeholder="Email" required>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">New Email:</label>
+      <input [(ngModel)]="newEmail" type ="email" class="form-control col-sm-6" placeholder="New Email" required>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6 disablePadding">
+        <button class="btn btn-primary float-left" (click)="change()">Change</button>
+        <button mat-dialog-close class="btn btn-primary px-6 largeButton float-right">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
