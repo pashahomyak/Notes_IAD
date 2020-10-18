@@ -168,14 +168,36 @@ namespace Notes.Data
             return userDto;
         }
 
-        public async Task<ServiceResponce> ChangeEmail(string inputToken)
+        public async Task<ServiceResponce> ChangeEmail(ModificationDto modificationDto)
         {
-            JwtSecurityToken decodedToken = GetDecodedToken(inputToken);
+            JwtSecurityToken decodedToken = GetDecodedToken(modificationDto.Token);
 
             User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
             
-            //добавить ModificationDto {token, oldValue, newValue}
             //https://www.entityframeworktutorial.net/efcore/update-data-in-entity-framework-core.aspx
+
+            ServiceResponce serviceResponce = new ServiceResponce();
+            
+            if (user.Email != modificationDto.OldValue)
+            {
+                serviceResponce.success = false;
+                serviceResponce.message = "Incorrect Email";
+            }
+            else
+            {
+                //добавить проверку на корректность email
+                user.Email = modificationDto.NewValue;
+
+                _context.Update<User>(user);
+                _context.SaveChanges();
+
+                serviceResponce.success = true;
+                serviceResponce.message = "Email change successfully.";
+                
+                serviceResponce.data = CreateToken(user);
+            }
+
+            return serviceResponce;
         }
     }
 }

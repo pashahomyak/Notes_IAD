@@ -48,5 +48,13 @@ namespace Notes.Controllers
 
             return Ok(userDto);
         }
+        
+        [HttpPost("changeEmail")]
+        public async Task<ActionResult> ChangeEmail(ModificationDto modificationDto)
+        {
+            ServiceResponce serviceResponce = await _authRepo.ChangeEmail(modificationDto);
+
+            return Ok(serviceResponce);
+        }
     }
 }

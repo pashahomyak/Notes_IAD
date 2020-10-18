@@ -18,5 +18,16 @@
         <button mat-dialog-close class="btn btn-primary px-6 largeButton float-right">Close</button>
       </div>
     </div>
+
+    <div *ngIf="responceIsReceived">
+      <div *ngIf="serviceResponce.success" class="alert alert-success" role="alert">
+        {{serviceResponce.message}}
+        {{updateToken()}}
+      </div>
+      <div *ngIf="!serviceResponce.success" class="alert alert-danger" role="alert">
+        {{serviceResponce.message}}
+      </div>
+    </div>
+
   </div>
 </div>
