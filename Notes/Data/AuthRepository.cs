@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Notes.Data
@@ -63,6 +64,20 @@ namespace Notes.Data
                 return serviceResponce;
             }
 
+            if (!IsValidEmail(userDto.Email))
+            {
+                serviceResponce.success = false;
+                serviceResponce.message = "Incorrect Email.";
+                return serviceResponce;
+            }
+            
+            if (!IsValidPassword(Consts.passwordRegexPattern, userDto.Password))
+            {
+                serviceResponce.success = false;
+                serviceResponce.message = "Incorrect Password.";
+                return serviceResponce;
+            }
+            
             User user = new User();
             user.Login = userDto.Login;
             user.Email = userDto.Email;
@@ -152,6 +167,22 @@ namespace Notes.Data
 
             return resultToken;
         }
+        private bool IsValidEmail(string email)
+        {
+            try {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch {
+                return false;
+            }
+        }
+        private bool IsValidPassword(string pattern, string password)
+        {
+            Regex regex = new Regex(pattern);
+
+            return regex.IsMatch(password);
+        }
         
         public async Task<UserDto> GetProfileData(string inputToken)
         {
@@ -181,11 +212,17 @@ namespace Notes.Data
             if (user.Email != modificationDto.OldValue)
             {
                 serviceResponce.success = false;
-                serviceResponce.message = "Incorrect Email";
+                serviceResponce.message = "Incorrect current Email";
             }
             else
             {
-                //добавить проверку на корректность email
+                if (!IsValidEmail(modificationDto.NewValue))
+                {
+                    serviceResponce.success = false;
+                    serviceResponce.message = "Incorrect new Email";
+                    return serviceResponce;
+                }
+                
                 user.Email = modificationDto.NewValue;
 
                 _context.Update<User>(user);
@@ -193,6 +230,44 @@ namespace Notes.Data
 
                 serviceResponce.success = true;
                 serviceResponce.message = "Email change successfully.";
+                
+                serviceResponce.data = CreateToken(user);
+            }
+
+            return serviceResponce;
+        }
+        
+        public async Task<ServiceResponce> ChangePassword(ModificationDto modificationDto)
+        {
+            JwtSecurityToken decodedToken = GetDecodedToken(modificationDto.Token);
+
+            User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
+            
+            //https://www.entityframeworktutorial.net/efcore/update-data-in-entity-framework-core.aspx
+
+            ServiceResponce serviceResponce = new ServiceResponce();
+            
+            if (user.Password != GetPasswordHash(modificationDto.OldValue))
+            {
+                serviceResponce.success = false;
+                serviceResponce.message = "Incorrect Password";
+            }
+            else
+            {
+                if (!IsValidPassword(Consts.passwordRegexPattern, modificationDto.NewValue))
+                {
+                    serviceResponce.success = false;
+                    serviceResponce.message = "Incorrect Password.";
+                    return serviceResponce;
+                }
+                
+                user.Password = GetPasswordHash(modificationDto.NewValue);
+
+                _context.Update<User>(user);
+                _context.SaveChanges();
+
+                serviceResponce.success = true;
+                serviceResponce.message = "Password change successfully.";
                 
                 serviceResponce.data = CreateToken(user);
             }

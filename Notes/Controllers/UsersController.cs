@@ -56,5 +56,13 @@ namespace Notes.Controllers
 
             return Ok(serviceResponce);
         }
+        
+        [HttpPost("changePassword")]
+        public async Task<ActionResult> ChangePassword(ModificationDto modificationDto)
+        {
+            ServiceResponce serviceResponce = await _authRepo.ChangePassword(modificationDto);
+
+            return Ok(serviceResponce);
+        }
     }
 }

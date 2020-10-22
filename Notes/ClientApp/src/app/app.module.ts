@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { DialogElementsEmailComponent } from './dialog-elements-email/dialog-elements-email.component';
 import { DialogElementsPasswordComponent } from './dialog-elements-password/dialog-elements-password.component';
+import { HomeAuthorizedComponent } from './home-authorized/home-authorized.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -31,7 +32,8 @@ export function tokenGetter() {
     RegistrationComponent,
     ProfileComponent,
     DialogElementsEmailComponent,
-    DialogElementsPasswordComponent
+    DialogElementsPasswordComponent,
+    HomeAuthorizedComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -51,12 +53,19 @@ export function tokenGetter() {
         component: ProfileComponent,
         canActivate: [AuthGuard]
       },
+      { path: 'home',
+        component: HomeAuthorizedComponent,
+        canActivate: [AuthGuard]
+      },
       { path: '**', redirectTo: '' }
     ]),
     BrowserAnimationsModule,
     MaterialModule
   ],
-  entryComponents: [DialogElementsEmailComponent, DialogElementsPasswordComponent],
+  entryComponents: [
+    DialogElementsEmailComponent,
+    DialogElementsPasswordComponent
+  ],
   providers: [
     AuthGuard,
     AuthService,
