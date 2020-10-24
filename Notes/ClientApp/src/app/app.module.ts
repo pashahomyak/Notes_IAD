@@ -51,14 +51,16 @@ export function tokenGetter() {
       { path: 'registration', component: RegistrationComponent},
       { path: 'profile',
         component: ProfileComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        data: {page: 'profile'}
       },
       { path: 'home',
         component: HomeAuthorizedComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        data: {page: 'home'}
       },
       { path: '**', redirectTo: '' }
-    ]),
+    ], {onSameUrlNavigation: 'reload'}),
     BrowserAnimationsModule,
     MaterialModule
   ],

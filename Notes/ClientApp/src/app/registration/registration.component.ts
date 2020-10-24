@@ -33,11 +33,14 @@ export class RegistrationComponent implements OnInit {
         this.serviceResponce = data;
       });
 
-    //this.router.navigate([''], { relativeTo: this.route });
     this.responceIsReceived = true;
   }
 
   saveToken() {
     localStorage.setItem("token", this.serviceResponce.data);
+  }
+
+  goHome() {
+    this.router.navigate(['home']);
   }
 }

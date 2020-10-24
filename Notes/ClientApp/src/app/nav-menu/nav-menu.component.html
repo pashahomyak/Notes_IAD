@@ -2,6 +2,11 @@
   <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
     <div class="container">
       <a class="navbar-brand" [routerLink]="['/']">Notes</a>
+
+      <div *ngIf="isAuthorized">
+        <button class="btn btn-primary mr-3" (click)="toProfile()">Profile</button>
+        <button class="btn btn-primary" (click)="logOut()">Log Out</button>
+      </div>
     </div>
   </nav>
 </header>

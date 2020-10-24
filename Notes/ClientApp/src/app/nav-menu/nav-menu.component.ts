@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {ActivatedRouteSnapshot, Router} from "@angular/router";
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,5 +7,23 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav-menu.component.css']
 })
 
-export class NavMenuComponent {
+export class NavMenuComponent{
+  isAuthorized: boolean = false;
+
+  constructor(public router: Router) {
+    if (window.location.pathname === '/home') {
+      this.isAuthorized = true;
+    }
+  }
+
+  toProfile() {
+    this.router.navigate(['profile']);
+  }
+
+  logOut() {
+    localStorage.removeItem("token");
+    window.location.reload();
+
+    this.isAuthorized = false;
+  }
 }

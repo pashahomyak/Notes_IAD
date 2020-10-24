@@ -18,27 +18,28 @@ export class AuthorizationComponent implements OnInit {
 
   serviceResponce: ServiceResponce;
 
-  constructor(private dataService: DataService) { }
+  constructor(
+    private dataService: DataService, public router: Router)
+  { }
 
   ngOnInit() {
     this.responceIsReceived = false;
   }
 
   signIn() {
-    if (this.login == "" || this.password == "") {
-      //error
-    } else {
-      let user: User = new User(this.login, this.password, null);
+    let user: User = new User(this.login, this.password, null);
 
-      this.dataService.getData("signIn", user)
-        .subscribe((data: ServiceResponce) => this.serviceResponce = data);
+    this.dataService.getData("signIn", user)
+      .subscribe((data: ServiceResponce) => this.serviceResponce = data);
 
-      //this.router.navigate([''], { relativeTo: this.route });
-      this.responceIsReceived = true;
-    }
+    this.responceIsReceived = true;
   }
 
   saveToken() {
     localStorage.setItem("token", this.serviceResponce.data);
+  }
+
+  goHome() {
+    this.router.navigate(['home']);
   }
 }

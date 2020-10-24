@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Router, CanActivate } from '@angular/router';
+import {Router, CanActivate, ActivatedRouteSnapshot} from '@angular/router';
 import { AuthService } from './auth.service';
 
 @Injectable({providedIn: "root"})
@@ -7,9 +7,16 @@ import { AuthService } from './auth.service';
 export class AuthGuardService implements CanActivate {
   constructor(public auth: AuthService, public router: Router) {}
 
-  canActivate(): boolean {
+  canActivate(next: ActivatedRouteSnapshot): boolean {
   if (!this.auth.isAuthenticated()) {
-    this.router.navigate(['authorization']);
+
+    if (next.data.page == 'home') {
+      this.router.navigate(['']);
+    }
+    else if (next.data.page == 'profile') {
+      this.router.navigate(['authorization']);
+    }
+
     return false;
   }
   return true;

@@ -23,7 +23,7 @@
       <div class="form-group row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6 disablePadding">
-          <button class="btn btn-primary float-left" (click)="signUp(); saveToken()">Sign Up</button>
+          <button class="btn btn-primary float-left" (click)="signUp();">Sign Up</button>
           <a [routerLink]="['']" class="btn btn-primary px-6 largeButton float-right">Back</a>
         </div>
       </div>
@@ -32,6 +32,7 @@
         <div *ngIf="serviceResponce.success" class="alert alert-success" role="alert">
           {{serviceResponce.message}}
           {{saveToken()}}
+          {{goHome()}}
         </div>
         <div *ngIf="!serviceResponce.success" class="alert alert-danger" role="alert">
           {{serviceResponce.message}}

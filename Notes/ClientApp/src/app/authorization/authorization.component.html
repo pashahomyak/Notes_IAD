@@ -24,6 +24,7 @@
         <div *ngIf="serviceResponce.success" class="alert alert-success" role="alert">
           {{serviceResponce.message}}
           {{saveToken()}}
+          {{goHome()}}
         </div>
         <div *ngIf="!serviceResponce.success" class="alert alert-danger" role="alert">
           {{serviceResponce.message}}
