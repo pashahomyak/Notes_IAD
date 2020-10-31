@@ -115,6 +115,9 @@ namespace Notes.Migrations
                 name: "IX_user_has_note_id_note",
                 table: "user_has_note",
                 column: "id_note");
+
+            migrationBuilder.Sql("INSERT INTO user_type VALUES ('admin'), ('user');");
+            migrationBuilder.Sql("INSERT INTO note_category VALUES ('main'), ('features');");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
