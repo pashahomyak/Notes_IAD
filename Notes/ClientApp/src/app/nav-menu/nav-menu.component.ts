@@ -7,7 +7,7 @@ import {ActivatedRouteSnapshot, Router} from "@angular/router";
   styleUrls: ['./nav-menu.component.css']
 })
 
-export class NavMenuComponent{
+export class NavMenuComponent {
   isAuthorized: boolean = false;
 
   constructor(public router: Router) {

@@ -2,6 +2,6 @@
 {
     public class Consts
     {
-        public const string passwordRegexPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,20}$";
+        public const string PASSWORD_REGEX_PATTERN = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,20}$";
     }
 }

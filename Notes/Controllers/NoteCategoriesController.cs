@@ -5,29 +5,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Notes.Data;
+using Notes.Dto;
 using Notes.Models;
 
 namespace Notes.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("noteCategories")]
     [ApiController]
     public class NoteCategoriesController : ControllerBase
     {
-        private readonly NotesContext _context;
+        private readonly IAuthRepository _authRepo;
 
-        public NoteCategoriesController(NotesContext context)
+        public NoteCategoriesController(IAuthRepository authRepo)
         {
-            _context = context;
+            _authRepo = authRepo;
         }
 
-        // GET: api/NoteCategories
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<NoteCategory>>> GetNoteCategory()
+
+        [HttpPost("getNoteCategories")]
+        public async Task<ActionResult> GetNoteCategory(TokenDto tokenDto)
         {
-            return await _context.NoteCategory.ToListAsync();
+            NoteCategoryDto noteCategoryDtos = await _authRepo.GetNoteCategories(tokenDto.Data);
+
+            return Ok(noteCategoryDtos);
         }
 
-        // GET: api/NoteCategories/5
+        /*// GET: api/NoteCategories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<NoteCategory>> GetNoteCategory(int id)
         {
@@ -104,6 +108,6 @@ namespace Notes.Controllers
         private bool NoteCategoryExists(int id)
         {
             return _context.NoteCategory.Any(e => e.IdNoteCategory == id);
-        }
+        }*/
     }
 }

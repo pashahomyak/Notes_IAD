@@ -1,0 +1,22 @@
+.category-bar {
+  width: 20%;
+}
+
+.note-block {
+  width: 80%;
+}
+
+.v-align {
+  display: inline-block;
+  float: none;
+  vertical-align: middle;
+}
+
+.category-bar-button-block {
+  height: 200px;
+  width: 100%;
+}
+
+.add-btn {
+  margin: 81px auto;
+}

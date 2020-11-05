@@ -17,9 +17,11 @@ code {
 
 html, body {
   height: 100%;
+  overflow: hidden;
 }
 
 .full-height {
+  /*height: calc(100% - 57px);*/
   height: 100%;
 }
 
@@ -27,5 +29,4 @@ html, body {
   padding: 0;
 }
 
-html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

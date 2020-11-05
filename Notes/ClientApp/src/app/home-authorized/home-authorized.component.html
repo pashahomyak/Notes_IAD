@@ -1,8 +1,13 @@
-<div class="row">
-  <div class="col-3">
-    <p>Hello</p>
+<div class="full-height">
+  <div class="category-bar border-right btn-group-vertical v-align full-height text-center">
+    <div class="category-bar-button-block border-bottom text-center">
+      <button class="btn btn-primary add-btn">Add Note</button>
+    </div>
+    <div class="note-categories p-4">
+      <a *ngFor="let category of noteCategories">{{category.name}}</a>
+    </div>
   </div>
-  <div class="col-9 border-left">
+  <div class="note-block v-align full-height p-4">
     <p>World</p>
   </div>
 </div>

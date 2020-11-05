@@ -26,9 +26,9 @@ namespace Notes.Data
             _configuration = configuration;
         }
 
-        public User GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            return _context.User.Find(id);
+            return await _context.User.FindAsync(id);
         }
         public async Task<ServiceResponce> Login(string login, string password)
         {
@@ -71,7 +71,7 @@ namespace Notes.Data
                 return serviceResponce;
             }
             
-            if (!IsValidPassword(Consts.passwordRegexPattern, userDto.Password))
+            if (!IsValidPassword(Consts.PASSWORD_REGEX_PATTERN, userDto.Password))
             {
                 serviceResponce.success = false;
                 serviceResponce.message = "Incorrect Password.";
@@ -104,8 +104,6 @@ namespace Notes.Data
 
             return false;
         }
-        
-        
         private string GetPasswordHash(string inputPassword)
         {
             var md5 = MD5.Create();
@@ -183,12 +181,11 @@ namespace Notes.Data
 
             return regex.IsMatch(password);
         }
-        
         public async Task<UserDto> GetProfileData(string inputToken)
         {
             JwtSecurityToken decodedToken = GetDecodedToken(inputToken);
 
-            User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
+            User user = await GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
 
             UserDto userDto = new UserDto
             {
@@ -198,12 +195,11 @@ namespace Notes.Data
 
             return userDto;
         }
-
         public async Task<ServiceResponce> ChangeEmail(ModificationDto modificationDto)
         {
             JwtSecurityToken decodedToken = GetDecodedToken(modificationDto.Token);
 
-            User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
+            User user = await GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
             
             //https://www.entityframeworktutorial.net/efcore/update-data-in-entity-framework-core.aspx
 
@@ -236,12 +232,11 @@ namespace Notes.Data
 
             return serviceResponce;
         }
-        
         public async Task<ServiceResponce> ChangePassword(ModificationDto modificationDto)
         {
             JwtSecurityToken decodedToken = GetDecodedToken(modificationDto.Token);
 
-            User user = GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
+            User user = await GetById(Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value));
             
             //https://www.entityframeworktutorial.net/efcore/update-data-in-entity-framework-core.aspx
 
@@ -254,7 +249,7 @@ namespace Notes.Data
             }
             else
             {
-                if (!IsValidPassword(Consts.passwordRegexPattern, modificationDto.NewValue))
+                if (!IsValidPassword(Consts.PASSWORD_REGEX_PATTERN, modificationDto.NewValue))
                 {
                     serviceResponce.success = false;
                     serviceResponce.message = "Incorrect Password.";
@@ -273,6 +268,24 @@ namespace Notes.Data
             }
 
             return serviceResponce;
+        }
+
+        public async Task<NoteCategoryDto> GetNoteCategories(string inputToken)
+        {
+            JwtSecurityToken decodedToken = GetDecodedToken(inputToken);
+
+            int idUser = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+            List<UserHasNote> userHasNotes = await _context.UserHasNote.Where(u => u.IdUser == idUser).ToListAsync();
+            
+            NoteCategoryDto noteCategoryDto = new NoteCategoryDto();
+
+            foreach (var userHasNote in userHasNotes)
+            {
+                string category = _context.NoteCategory.FirstAsync(p => p.IdNoteCategory == userHasNote.IdNote).Result.Name;
+                noteCategoryDto.Categories.Add(category);
+            }
+
+            return noteCategoryDto;
         }
     }
 }

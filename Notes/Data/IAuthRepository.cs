@@ -10,12 +10,13 @@ namespace Notes.Data
 {
     public interface IAuthRepository
     {
-        public User GetById(int id);
+        Task<User> GetById(int id);
         Task<ServiceResponce> Register(UserDto userDto);
         Task<ServiceResponce> Login(string login, string password);
         Task<bool> UserExists(string login);
         Task<UserDto> GetProfileData(string inputToken);
         Task<ServiceResponce> ChangeEmail(ModificationDto modificationDto);
         Task<ServiceResponce> ChangePassword(ModificationDto modificationDto);
+        Task<NoteCategoryDto> GetNoteCategories(string tokenDtoData);
     }
 }
