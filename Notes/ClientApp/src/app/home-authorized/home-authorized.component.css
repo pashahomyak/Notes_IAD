@@ -20,3 +20,7 @@
 .add-btn {
   margin: 81px auto;
 }
+
+.category-button {
+  border-radius: 5px !important;
+}

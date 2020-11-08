@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
   getProfileData() {
     let token: Token = new Token(localStorage.getItem("token"));
 
-    this.dataService.getData("getProfileData", token)
+    this.dataService.getData("/users/", "getProfileData", token)
       .subscribe((data: User) => {this.userDto = data; this.dataIsObtained = true;});
   }
   fillProfileData() {

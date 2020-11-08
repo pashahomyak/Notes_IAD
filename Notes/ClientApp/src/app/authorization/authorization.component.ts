@@ -29,7 +29,7 @@ export class AuthorizationComponent implements OnInit {
   signIn() {
     let user: User = new User(this.login, this.password, null);
 
-    this.dataService.getData("signIn", user)
+    this.dataService.getData("/users/", "signIn", user)
       .subscribe((data: ServiceResponce) => this.serviceResponce = data);
 
     this.responceIsReceived = true;

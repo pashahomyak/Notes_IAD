@@ -11,6 +11,7 @@ namespace Notes.Models
         public User()
         {
             UserHasNote = new HashSet<UserHasNote>();
+            UserHasNoteCategory = new HashSet<UserHasNoteCategory>();
         }
 
         [Key]
@@ -36,5 +37,7 @@ namespace Notes.Models
         public virtual UserType IdUserTypeNavigation { get; set; }
         [InverseProperty("IdUserNavigation")]
         public virtual ICollection<UserHasNote> UserHasNote { get; set; }
+        [InverseProperty("IdUserNavigation")]
+        public virtual ICollection<UserHasNoteCategory> UserHasNoteCategory { get; set; }
     }
 }

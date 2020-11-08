@@ -28,7 +28,7 @@ export class RegistrationComponent implements OnInit {
   signUp() {
     let user: User = new User(this.login, this.password, this.email);
 
-    this.dataService.getData("signUp", user)
+    this.dataService.getData("/users/", "signUp", user)
       .subscribe((data: ServiceResponce) => {
         this.serviceResponce = data;
       });

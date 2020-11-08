@@ -28,7 +28,7 @@ export class DialogElementsPasswordComponent implements OnInit {
       this.newPassword
     );
 
-    this.dataService.getData("changePassword", modificationModel)
+    this.dataService.getData("/users/", "changePassword", modificationModel)
       .subscribe((data: ServiceResponce) => {
         this.serviceResponce = data;
       });

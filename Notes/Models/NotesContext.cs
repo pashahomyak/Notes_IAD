@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
+//Scaffold-DbContext "Server=COMPUTER\SQLEXPRESS;Database=Notes;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -DataAnnotations -Force
 namespace Notes.Models
 {
     public partial class NotesContext : DbContext
@@ -19,15 +19,8 @@ namespace Notes.Models
         public virtual DbSet<NoteCategory> NoteCategory { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserHasNote> UserHasNote { get; set; }
+        public virtual DbSet<UserHasNoteCategory> UserHasNoteCategory { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseSqlServer("Server=COMPUTER\\SQLEXPRESS;Database=Notes;Trusted_Connection=True;");
-        //    }
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,6 +59,21 @@ namespace Notes.Models
                     .WithMany(p => p.UserHasNote)
                     .HasForeignKey(d => d.IdUser)
                     .HasConstraintName("FK_user_has_note_user");
+            });
+
+            modelBuilder.Entity<UserHasNoteCategory>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser, e.IdNoteCategory });
+
+                entity.HasOne(d => d.IdNoteCategoryNavigation)
+                    .WithMany(p => p.UserHasNoteCategory)
+                    .HasForeignKey(d => d.IdNoteCategory)
+                    .HasConstraintName("FK_user_has_note_category_note_category");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UserHasNoteCategory)
+                    .HasForeignKey(d => d.IdUser)
+                    .HasConstraintName("FK_user_has_note_category_user");
             });
 
             OnModelCreatingPartial(modelBuilder);

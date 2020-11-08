@@ -7,8 +7,8 @@ export class DataService {
   constructor(private http: HttpClient) {
   }
 
-  getData(myUrl: string, data) {
-    let url: string = "/users/" + myUrl;
+  getData(page: string, myUrl: string, data) {
+    let url: string = page + myUrl;
 
     return this.http.post(url, data);
   }

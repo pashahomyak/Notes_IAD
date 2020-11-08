@@ -29,7 +29,7 @@ export class DialogElementsEmailComponent implements OnInit {
       this.newEmail
     );
 
-    this.dataService.getData("changeEmail", modificationModel)
+    this.dataService.getData("/users/","changeEmail", modificationModel)
       .subscribe((data: ServiceResponce) => {
         this.serviceResponce = data;
       });

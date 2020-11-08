@@ -275,16 +275,20 @@ namespace Notes.Data
             JwtSecurityToken decodedToken = GetDecodedToken(inputToken);
 
             int idUser = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
-            List<UserHasNote> userHasNotes = await _context.UserHasNote.Where(u => u.IdUser == idUser).ToListAsync();
+            List<UserHasNoteCategory> userHasNoteCategories = await _context.UserHasNoteCategory.Where(u => u.IdUser == idUser).ToListAsync();
             
             NoteCategoryDto noteCategoryDto = new NoteCategoryDto();
+            List<string> categories = new List<string>();
 
-            foreach (var userHasNote in userHasNotes)
+            foreach (var userHasNoteCategory in userHasNoteCategories)
             {
-                string category = _context.NoteCategory.FirstAsync(p => p.IdNoteCategory == userHasNote.IdNote).Result.Name;
-                noteCategoryDto.Categories.Add(category);
+                string noteCategory =
+                    _context.NoteCategory.FirstAsync(p => p.IdNoteCategory == userHasNoteCategory.IdNoteCategory).Result.Name;
+                categories.Add(noteCategory);
             }
 
+            noteCategoryDto.Categories = categories;
+            
             return noteCategoryDto;
         }
     }

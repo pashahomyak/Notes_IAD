@@ -23,7 +23,7 @@ export class HomeAuthorizedComponent implements OnInit {
   private getNoteCategories() {
     let token: Token = new Token(localStorage.getItem("token"));
 
-    this.dataService.getData("getNoteCategories", token)
+    this.dataService.getData("/noteCategories/", "getNoteCategories", token)
       .subscribe((data: NoteCategory) => this.noteCategories = data);
   }
 

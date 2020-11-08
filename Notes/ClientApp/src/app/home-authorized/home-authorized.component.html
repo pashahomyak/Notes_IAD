@@ -3,8 +3,8 @@
     <div class="category-bar-button-block border-bottom text-center">
       <button class="btn btn-primary add-btn">Add Note</button>
     </div>
-    <div class="note-categories p-4">
-      <a *ngFor="let category of noteCategories">{{category.name}}</a>
+    <div class="note-categories p-4 btn-group-vertical w-75">
+      <button *ngFor="let category of noteCategories.categories" class="btn btn-secondary m-2 category-button">{{category}}</button>
     </div>
   </div>
   <div class="note-block v-align full-height p-4">
