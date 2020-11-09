@@ -18,6 +18,8 @@ import { MaterialModule } from './material.module';
 import { DialogElementsEmailComponent } from './dialog-elements-email/dialog-elements-email.component';
 import { DialogElementsPasswordComponent } from './dialog-elements-password/dialog-elements-password.component';
 import { HomeAuthorizedComponent } from './home-authorized/home-authorized.component';
+import { DialogElementsAddNoteComponent } from './dialog-elements-add-note/dialog-elements-add-note.component';
+import { DialogElementsCategorySettingsComponent } from './dialog-elements-category-settings/dialog-elements-category-settings.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -33,7 +35,9 @@ export function tokenGetter() {
     ProfileComponent,
     DialogElementsEmailComponent,
     DialogElementsPasswordComponent,
-    HomeAuthorizedComponent
+    HomeAuthorizedComponent,
+    DialogElementsAddNoteComponent,
+    DialogElementsCategorySettingsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -66,7 +70,9 @@ export function tokenGetter() {
   ],
   entryComponents: [
     DialogElementsEmailComponent,
-    DialogElementsPasswordComponent
+    DialogElementsPasswordComponent,
+    DialogElementsAddNoteComponent,
+    DialogElementsCategorySettingsComponent
   ],
   providers: [
     AuthGuard,

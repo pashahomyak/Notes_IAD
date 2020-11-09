@@ -1,10 +1,13 @@
 <div class="full-height">
   <div class="category-bar border-right btn-group-vertical v-align full-height text-center">
     <div class="category-bar-button-block border-bottom text-center">
-      <button class="btn btn-primary add-btn">Add Note</button>
+      <button class="btn btn-primary add-btn" (click)="addNote()">Add Note</button>
     </div>
     <div class="note-categories p-4 btn-group-vertical w-75">
-      <button *ngFor="let category of noteCategories.categories" class="btn btn-secondary m-2 category-button">{{category}}</button>
+      <button class="btn btn-secondary mb-2 category-button font-weight-bold" (click)="getMainNotes()">Main</button>
+      <button class="btn btn-secondary mb-2 category-button font-weight-bold" (click)="getFavoritesNotes()">Favorites</button>
+      <button *ngFor="let category of noteCategories.categories" class="btn btn-secondary mb-2 category-button">{{category}}</button>
+      <button class="btn btn-primary add-btn category-button mt-3" (click)="openCategorySettings()">Categories Settings</button>
     </div>
   </div>
   <div class="note-block v-align full-height p-4">
