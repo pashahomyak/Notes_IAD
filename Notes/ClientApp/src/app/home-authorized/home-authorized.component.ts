@@ -7,6 +7,7 @@ import {DialogElementsEmailComponent} from "../dialog-elements-email/dialog-elem
 import {MatDialog} from "@angular/material/dialog";
 import {DialogElementsAddNoteComponent} from "../dialog-elements-add-note/dialog-elements-add-note.component";
 import {DialogElementsCategorySettingsComponent} from "../dialog-elements-category-settings/dialog-elements-category-settings.component";
+import {Notes} from "../_models/notes.model";
 
 @Component({
   selector: 'app-home-authorized',
@@ -16,12 +17,14 @@ import {DialogElementsCategorySettingsComponent} from "../dialog-elements-catego
 })
 export class HomeAuthorizedComponent implements OnInit {
   noteCategories: NoteCategory;
+  notes: Notes;
 
   constructor(private dataService: DataService, public dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.getNoteCategories()
+    this.getNoteCategories();
+    this.getMainNotes();
   }
 
   private getNoteCategories() {
@@ -32,7 +35,10 @@ export class HomeAuthorizedComponent implements OnInit {
   }
 
   getMainNotes() {
+    let token: Token = new Token(localStorage.getItem("token"));
 
+    this.dataService.getData("/notes/", "getMainNotes", token)
+      .subscribe((data: Notes) => this.notes = data);
   }
 
   getFavoritesNotes() {

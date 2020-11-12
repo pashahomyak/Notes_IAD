@@ -11,7 +11,8 @@ export class NavMenuComponent {
   isAuthorized: boolean = false;
 
   constructor(public router: Router) {
-    if (window.location.pathname === '/home') {
+    //if (window.location.pathname === '/home') {
+    if (localStorage.getItem("token")) {
       this.isAuthorized = true;
     }
   }

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Notes.Dto;
 using Notes.Models;
 
 namespace Notes.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("notes")]
     [ApiController]
     public class NotesController : ControllerBase
     {
@@ -19,15 +21,40 @@ namespace Notes.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Notes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Note>>> GetNote()
+        
+        [HttpPost("getMainNotes")]
+        public async Task<ActionResult> GetMainNotes(TokenDto tokenDto)
         {
-            return await _context.Note.ToListAsync();
+            JwtSecurityToken decodedToken = GetDecodedToken(tokenDto.Data);
+            int id = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+            
+            var userHasNotes = _context.UserHasNote.Where(u => u.IdUser == id).ToList();
+            List<NoteDto> noteDtos = new List<NoteDto>();
+            foreach (var userHasNote in userHasNotes)
+            {
+                Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
+                noteDtos.Add(new NoteDto
+                {
+                    Header = note.Header,
+                    Description = note.Description,
+                    IsFavorites = note.IsFavorites,
+                    ImagePath = note.ImagePath
+                });
+            }
+            
+            return Ok(new NotesDto{Data = noteDtos.ToArray()});
+        }
+        
+        private JwtSecurityToken GetDecodedToken(string inputToken)
+        {
+            var jwt = inputToken;
+            var handler = new JwtSecurityTokenHandler();
+            var resultToken = handler.ReadJwtToken(jwt);
+
+            return resultToken;
         }
 
-        // GET: api/Notes/5
+        /*// GET: api/Notes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Note>> GetNote(int id)
         {
@@ -104,6 +131,6 @@ namespace Notes.Controllers
         private bool NoteExists(int id)
         {
             return _context.Note.Any(e => e.IdNote == id);
-        }
+        }*/
     }
 }

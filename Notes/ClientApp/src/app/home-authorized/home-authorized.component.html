@@ -10,7 +10,13 @@
       <button class="btn btn-primary add-btn category-button mt-3" (click)="openCategorySettings()">Categories Settings</button>
     </div>
   </div>
-  <div class="note-block v-align full-height p-4">
-    <p>World</p>
+  <div class="note-block v-align full-height p-4" *ngFor="let note of notes.data">
+   <div class="card cardWidth m-2">
+      <img class="card-img-top" src="{{note.imagePath}}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{note.header}}</h5>
+        <p class="card-text">{{note.description}}</p>
+      </div>
+    </div>
   </div>
 </div>

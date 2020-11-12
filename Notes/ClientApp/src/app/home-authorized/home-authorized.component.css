@@ -24,3 +24,7 @@
 .category-button {
   border-radius: 5px !important;
 }
+
+.cardWidth {
+  width: 18rem;
+}
