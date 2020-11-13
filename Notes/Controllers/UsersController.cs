@@ -41,6 +41,7 @@ namespace Notes.Controllers
             return Ok(serviceResponce);
         }
         
+        [Authorize]
         [HttpPost("getProfileData")]
         public async Task<ActionResult> GetProfileData(TokenDto tokenDto)
         {
@@ -49,6 +50,7 @@ namespace Notes.Controllers
             return Ok(userDto);
         }
         
+        [Authorize]
         [HttpPost("changeEmail")]
         public async Task<ActionResult> ChangeEmail(ModificationDto modificationDto)
         {
@@ -57,6 +59,7 @@ namespace Notes.Controllers
             return Ok(serviceResponce);
         }
         
+        [Authorize]
         [HttpPost("changePassword")]
         public async Task<ActionResult> ChangePassword(ModificationDto modificationDto)
         {
