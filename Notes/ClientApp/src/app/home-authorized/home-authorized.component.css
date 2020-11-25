@@ -27,4 +27,9 @@
 
 .cardWidth {
   width: 18rem;
+  float: left;
+}
+
+.clickableImage {
+  cursor: pointer;
 }

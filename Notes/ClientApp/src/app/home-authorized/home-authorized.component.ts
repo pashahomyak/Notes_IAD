@@ -18,6 +18,7 @@ import {Notes} from "../_models/notes.model";
 export class HomeAuthorizedComponent implements OnInit {
   noteCategories: NoteCategory;
   notes: Notes;
+  favoritesPath: string = "assets/images/star1.png";
 
   constructor(private dataService: DataService, public dialog: MatDialog) {
   }
@@ -25,6 +26,14 @@ export class HomeAuthorizedComponent implements OnInit {
   ngOnInit() {
     this.getNoteCategories();
     this.getMainNotes();
+  }
+
+  changeFavoritesState() {
+    if (this.favoritesPath === "assets/images/star1.png") {
+      this.favoritesPath = "assets/images/star11.png";
+    } else {
+      this.favoritesPath = "assets/images/star1.png";
+    }
   }
 
   private getNoteCategories() {
@@ -38,7 +47,7 @@ export class HomeAuthorizedComponent implements OnInit {
     let token: Token = new Token(localStorage.getItem("token"));
 
     this.dataService.getData("/notes/", "getMainNotes", token)
-      .subscribe((data: Notes) => this.notes = data);
+      .subscribe((data: Notes) => {this.notes = data; console.log(this.notes)});
   }
 
   getFavoritesNotes() {
