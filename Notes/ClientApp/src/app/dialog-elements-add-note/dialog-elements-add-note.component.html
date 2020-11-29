@@ -22,7 +22,7 @@
 
     <div class="form-group row">
       <label class="col-sm-3 col-form-label">Image:</label>
-      <input type="file" accept="image/*" [(ngModel)]="imagePath" class="form-control col-sm-6">
+      <input type="file" accept="image/*" (change)="onFileChanged($event)" class="form-control col-sm-6">
     </div>
 
     <div class="form-group row">

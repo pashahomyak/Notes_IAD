@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notes.Dto;
 using Notes.Models;
+using System.Drawing;
 
 namespace Notes.Controllers
 {
@@ -43,6 +45,56 @@ namespace Notes.Controllers
             }
             
             return Ok(new NotesDto{Data = noteDtos.ToArray()});
+        }
+        
+        [HttpPost("addNote")]
+        public async Task<ActionResult> AddNote(NoteDto noteDto)
+        {
+            string token = Request.Headers.Where(p => p.Key == "Authorization").First().Value.ToString().Substring(7);
+            JwtSecurityToken decodedToken = GetDecodedToken(token);
+            int id = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+
+            if (!String.IsNullOrEmpty(noteDto.ImageData) || !String.IsNullOrEmpty(noteDto.ImageName))
+            {
+                string imageData = noteDto.ImageData.Substring(noteDto.ImageData.IndexOf(',') + 1);
+                byte[] bytes = Convert.FromBase64String(imageData);
+                Image image;
+                using (MemoryStream ms = new MemoryStream(bytes))
+                {
+                    image = Image.FromStream(ms);
+                }
+                string path = Directory.GetCurrentDirectory();
+                if (!path.EndsWith("userImages"))
+                {
+                    Environment.CurrentDirectory = path + "\\ClientApp\\src\\assets\\userImages";
+                }
+                image.Save(noteDto.ImageName);
+                Environment.CurrentDirectory = path;
+            }
+
+            Note note = new Note
+            {
+                Header = noteDto.Header,
+                Description = noteDto.Description,
+                IsFavorites = noteDto.IsFavorites
+            };
+            if (!String.IsNullOrEmpty(noteDto.ImageName))
+            {
+                note.ImagePath = "assets/userImages/" + noteDto.ImageName.ToString();
+            }
+            _context.Note.Add(note);
+
+            _context.SaveChanges();
+            
+            _context.UserHasNote.Add(new UserHasNote
+            {
+                IdNote = note.IdNote,
+                IdUser = id
+            });
+            
+            _context.SaveChanges();
+            
+            return Ok("ok");
         }
         
         private JwtSecurityToken GetDecodedToken(string inputToken)

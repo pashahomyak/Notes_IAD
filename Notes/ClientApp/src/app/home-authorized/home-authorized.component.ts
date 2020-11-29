@@ -58,6 +58,7 @@ export class HomeAuthorizedComponent implements OnInit {
     this.dialog.open(DialogElementsAddNoteComponent, {
       //height: '400px',
       width: '600px',
+
     });
   }
 

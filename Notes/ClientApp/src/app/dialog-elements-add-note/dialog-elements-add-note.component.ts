@@ -3,12 +3,15 @@ import {DataService} from "../_services/data.service";
 import {Token} from "../_models/token.model";
 import {Notes} from "../_models/notes.model";
 import {NoteCategory} from "../_models/note-category.model";
+import {Note} from "../_models/note.model";
+import {Router} from "@angular/router";
+import {FormBuilder, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-dialog-elements-add-note',
   templateUrl: './dialog-elements-add-note.component.html',
   styleUrls: ['./dialog-elements-add-note.component.css'],
-  providers: [DataService]
+  providers: [DataService, FormBuilder]
 })
 export class DialogElementsAddNoteComponent implements OnInit {
   categories = [{'name': 'Main'}];
@@ -16,11 +19,19 @@ export class DialogElementsAddNoteComponent implements OnInit {
   description: string;
   selectedCategory: string;
   header: string;
-  imagePath: string;
 
   userCategories: string[];
 
-  constructor(private dataService: DataService) { }
+  result: string;
+
+  imageData: string;
+
+  private fileName: any;
+  public formGroup = this.fb.group({
+    file: [null, Validators.required]
+  });
+
+  constructor(private dataService: DataService, public router: Router, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.loadCategories();
@@ -31,7 +42,15 @@ export class DialogElementsAddNoteComponent implements OnInit {
   }
 
   addNote() {
+    let note: Note = new Note(this.header, this.description, false, this.imageData, this.fileName, "");
 
+    this.dataService.getData("/notes/", "addNote", note)
+      .subscribe((data: string) =>
+      {
+        this.result = data;
+
+        this.router.navigate(['home']);
+      });
   }
 
   loadCategories() {
@@ -44,5 +63,23 @@ export class DialogElementsAddNoteComponent implements OnInit {
           this.categories.push({'name': this.userCategories[index]});
         }
       });
+  }
+
+  onFileChanged(event) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      this.fileName = event.target.files[0].name;
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.formGroup.patchValue({
+          file: reader.result
+        });
+        this.imageData = this.formGroup.get('file').value.toString();
+      };
+    }
+
+    console.log(this.imageData);
   }
 }
