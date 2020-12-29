@@ -6,7 +6,7 @@
     <div class="note-categories p-4 btn-group-vertical w-75">
       <button class="btn btn-secondary mb-2 category-button font-weight-bold" (click)="getMainNotes()">Main</button>
       <button class="btn btn-secondary mb-2 category-button font-weight-bold" (click)="getFavoritesNotes()">Favorites</button>
-      <button *ngFor="let category of noteCategories.categories" class="btn btn-secondary mb-2 category-button">{{category}}</button>
+      <button *ngFor="let category of noteCategories.categories" class="btn btn-secondary mb-2 category-button" (click)="loadCateGoryNotes(category)">{{category}}</button>
       <button class="btn btn-primary add-btn category-button mt-3" (click)="openCategorySettings()">Categories Settings</button>
     </div>
   </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="border-top">
         <a class="clickableImage"><img class="m-2" src="assets/images/edit.png" width="20" height="20"></a>
-        <a class="clickableImage"><img class="m-2" src="assets/images/delete.png" width="20" height="20"></a>
+        <a class="clickableImage" (click)="deleteCurrentNote(note.id)"><img class="m-2" src="assets/images/delete.png" width="20" height="20"></a>
         <a *ngIf="note.isFavorites" class="clickableImage"><img class="m-2" src="assets/images/star11.png" width="20" height="20"></a>
         <a *ngIf="!note.isFavorites" class="clickableImage"><img class="m-2" src="assets/images/star1.png" width="20" height="20"></a>
       </div>

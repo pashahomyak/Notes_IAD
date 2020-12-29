@@ -37,6 +37,7 @@ namespace Notes.Controllers
                 Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
                 noteDtos.Add(new NoteDto
                 {
+                    Id = note.IdNote,
                     Header = note.Header,
                     Description = note.Description,
                     IsFavorites = note.IsFavorites,
@@ -104,6 +105,51 @@ namespace Notes.Controllers
             var resultToken = handler.ReadJwtToken(jwt);
 
             return resultToken;
+        }
+        
+        [HttpPost("deleteNote")]
+        public async Task<ActionResult> DeleteNote([FromBody] int id)
+        {
+            var note = await _context.Note.FindAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            _context.Note.Remove(note);
+            await _context.SaveChangesAsync();
+            
+            return Ok("ok");
+        }
+        
+        [HttpPost("getNotesByCategory")]
+        public async Task<ActionResult> GetNotesByCategory([FromBody] string category)
+        {
+            int categoryId = _context.NoteCategory.Where(p => p.Name == category).FirstOrDefault().IdNoteCategory;
+            
+            string token = Request.Headers.Where(p => p.Key == "Authorization").First().Value.ToString().Substring(7);
+            JwtSecurityToken decodedToken = GetDecodedToken(token);
+            int id = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+            
+            var userHasNotes = _context.UserHasNote.Where(u => u.IdUser == id).ToList();
+            List<NoteDto> noteDtos = new List<NoteDto>();
+            foreach (var userHasNote in userHasNotes)
+            {
+                Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
+                if (note.IdNoteCategory == categoryId)
+                {
+                    noteDtos.Add(new NoteDto
+                    {
+                        Id = note.IdNote,
+                        Header = note.Header,
+                        Description = note.Description,
+                        IsFavorites = note.IsFavorites,
+                        ImagePath = note.ImagePath
+                    });
+                }
+            }
+            
+            return Ok(new NotesDto{Data = noteDtos.ToArray()});
         }
 
         /*// GET: api/Notes/5

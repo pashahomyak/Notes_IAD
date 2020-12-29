@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogElementsAddNoteComponent} from "../dialog-elements-add-note/dialog-elements-add-note.component";
 import {DialogElementsCategorySettingsComponent} from "../dialog-elements-category-settings/dialog-elements-category-settings.component";
 import {Notes} from "../_models/notes.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home-authorized',
@@ -67,5 +68,15 @@ export class HomeAuthorizedComponent implements OnInit {
       height: '400px',
       width: '600px',
     });
+  }
+
+  deleteCurrentNote(id: number) {
+    this.dataService.getData("/notes/", "deleteNote", id)
+      .subscribe((data: string) => {this.ngOnInit()});
+  }
+
+  loadCateGoryNotes(category: string) {
+    this.dataService.getData("/notes/", "getNotesByCategory", category)
+      .subscribe((data: Notes) => {this.notes = data; console.log("work click")});
   }
 }

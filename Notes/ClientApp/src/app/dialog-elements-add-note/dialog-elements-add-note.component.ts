@@ -42,7 +42,7 @@ export class DialogElementsAddNoteComponent implements OnInit {
   }
 
   addNote() {
-    let note: Note = new Note(this.header, this.description, false, this.imageData, this.fileName, "");
+    let note: Note = new Note(0, this.header, this.description, false, this.imageData, this.fileName, "");
 
     this.dataService.getData("/notes/", "addNote", note)
       .subscribe((data: string) =>
