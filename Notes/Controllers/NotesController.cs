@@ -111,18 +111,37 @@ namespace Notes.Controllers
         }
         
         [HttpPost("deleteNote")]
-        public async Task<ActionResult> DeleteNote([FromBody] int id)
+        public async Task<ActionResult> DeleteNote([FromBody] int noteId)
         {
-            var note = await _context.Note.FindAsync(id);
-            if (note == null)
+            var foundNote = await _context.Note.FindAsync(noteId);
+            if (foundNote == null)
             {
                 return NotFound();
             }
 
-            _context.Note.Remove(note);
+            _context.Note.Remove(foundNote);
             await _context.SaveChangesAsync();
             
-            return Ok("ok");
+            string token = Request.Headers.Where(p => p.Key == "Authorization").First().Value.ToString().Substring(7);
+            JwtSecurityToken decodedToken = GetDecodedToken(token);
+            int id = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+            
+            var userHasNotes = _context.UserHasNote.Where(u => u.IdUser == id).ToList();
+            List<NoteDto> noteDtos = new List<NoteDto>();
+            foreach (var userHasNote in userHasNotes)
+            {
+                Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
+                noteDtos.Add(new NoteDto
+                {
+                    Id = note.IdNote,
+                    Header = note.Header,
+                    Description = note.Description,
+                    IsFavorites = note.IsFavorites,
+                    ImagePath = note.ImagePath
+                });
+            }
+            
+            return Ok(new NotesDto{Data = noteDtos.ToArray()});
         }
         
         [HttpPost("getNotesByCategory")]

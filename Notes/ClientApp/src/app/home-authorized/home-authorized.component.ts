@@ -77,7 +77,7 @@ export class HomeAuthorizedComponent implements OnInit {
 
   deleteCurrentNote(id: number) {
     this.dataService.getData("/notes/", "deleteNote", id)
-      .subscribe((data: string) => {this.ngOnInit()});
+      .subscribe((data: Notes) => {this.notes = data;});
   }
 
   loadCateGoryNotes(category: string) {
