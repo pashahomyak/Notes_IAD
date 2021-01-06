@@ -73,11 +73,14 @@ namespace Notes.Controllers
                 Environment.CurrentDirectory = path;
             }
 
+            int categoryIndex = _context.NoteCategory.First(p => p.Name == noteDto.CategoryName).IdNoteCategory;
+            
             Note note = new Note
             {
                 Header = noteDto.Header,
                 Description = noteDto.Description,
-                IsFavorites = noteDto.IsFavorites
+                IsFavorites = noteDto.IsFavorites,
+                IdNoteCategory = categoryIndex
             };
             if (!String.IsNullOrEmpty(noteDto.ImageName))
             {
@@ -123,9 +126,9 @@ namespace Notes.Controllers
         }
         
         [HttpPost("getNotesByCategory")]
-        public async Task<ActionResult> GetNotesByCategory([FromBody] string category)
+        public async Task<ActionResult> GetNotesByCategory(TokenDto tokenDto)
         {
-            int categoryId = _context.NoteCategory.Where(p => p.Name == category).FirstOrDefault().IdNoteCategory;
+            int categoryId = _context.NoteCategory.Where(p => p.Name == tokenDto.Data).FirstOrDefault().IdNoteCategory;
             
             string token = Request.Headers.Where(p => p.Key == "Authorization").First().Value.ToString().Substring(7);
             JwtSecurityToken decodedToken = GetDecodedToken(token);
@@ -137,6 +140,34 @@ namespace Notes.Controllers
             {
                 Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
                 if (note.IdNoteCategory == categoryId)
+                {
+                    noteDtos.Add(new NoteDto
+                    {
+                        Id = note.IdNote,
+                        Header = note.Header,
+                        Description = note.Description,
+                        IsFavorites = note.IsFavorites,
+                        ImagePath = note.ImagePath
+                    });
+                }
+            }
+            
+            return Ok(new NotesDto{Data = noteDtos.ToArray()});
+        }
+        
+        [HttpPost("getFavoritesNotes")]
+        public async Task<ActionResult> GetFavoritesNotes()
+        {
+            string token = Request.Headers.Where(p => p.Key == "Authorization").First().Value.ToString().Substring(7);
+            JwtSecurityToken decodedToken = GetDecodedToken(token);
+            int id = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+            
+            var userHasNotes = _context.UserHasNote.Where(u => u.IdUser == id).ToList();
+            List<NoteDto> noteDtos = new List<NoteDto>();
+            foreach (var userHasNote in userHasNotes)
+            {
+                Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
+                if (note.IsFavorites)
                 {
                     noteDtos.Add(new NoteDto
                     {

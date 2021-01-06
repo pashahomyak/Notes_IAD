@@ -52,7 +52,8 @@ export class HomeAuthorizedComponent implements OnInit {
   }
 
   getFavoritesNotes() {
-
+    this.dataService.getData("/notes/", "getFavoritesNotes", "")
+      .subscribe((data: Notes) => {this.notes = data;});
   }
 
   addNote() {
@@ -76,7 +77,7 @@ export class HomeAuthorizedComponent implements OnInit {
   }
 
   loadCateGoryNotes(category: string) {
-    this.dataService.getData("/notes/", "getNotesByCategory", category)
-      .subscribe((data: Notes) => {this.notes = data; console.log("work click")});
+    this.dataService.getData("/notes/", "getNotesByCategory", new Token(category))
+      .subscribe((data: Notes) => {this.notes = data;});
   }
 }

@@ -6,7 +6,8 @@
     public isFavorites: boolean,
     public imageData: string,
     public imageName: string,
-    public imagePath: string
+    public imagePath: string,
+    public categoryName: string
   ) {
   }
 }

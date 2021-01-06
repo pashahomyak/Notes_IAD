@@ -19,6 +19,7 @@ export class DialogElementsAddNoteComponent implements OnInit {
   description: string;
   selectedCategory: string;
   header: string;
+  categoryName: string;
 
   userCategories: string[];
 
@@ -38,11 +39,11 @@ export class DialogElementsAddNoteComponent implements OnInit {
   }
 
   onChange(category) {
-    console.log(category.name);
+    this.categoryName = category.name;
   }
 
   addNote() {
-    let note: Note = new Note(0, this.header, this.description, false, this.imageData, this.fileName, "");
+    let note: Note = new Note(0, this.header, this.description, false, this.imageData, this.fileName, "", this.categoryName);
 
     this.dataService.getData("/notes/", "addNote", note)
       .subscribe((data: string) =>

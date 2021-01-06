@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="note-block v-align full-height p-4" >
-   <div class="card cardWidth m-2" *ngFor="let note of notes.data">
+    <div class="card cardWidth m-2" *ngFor="let note of notes.data">
       <img *ngIf="note.imagePath" class="card-img-top" src="{{note.imagePath}}" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">{{note.header}}</h5>
