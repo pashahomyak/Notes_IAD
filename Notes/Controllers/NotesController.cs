@@ -182,6 +182,44 @@ namespace Notes.Controllers
             
             return Ok(new NotesDto{Data = noteDtos.ToArray()});
         }
+        
+        [HttpPost("changeFavoritesState")]
+        public async Task<ActionResult> ChangeFavoritesState(NoteDto noteDto)
+        {
+            string token = Request.Headers.Where(p => p.Key == "Authorization").First().Value.ToString().Substring(7);
+            JwtSecurityToken decodedToken = GetDecodedToken(token);
+            int id = Convert.ToInt32(decodedToken.Claims.First(c => c.Type == "nameid").Value);
+
+            //Обновление состояния
+            Note inputNote = _context.Note.First(p => p.IdNote == noteDto.Id);
+            if (inputNote.IsFavorites)
+            {
+                inputNote.IsFavorites = false;
+            }
+            else
+            {
+                inputNote.IsFavorites = true;
+            }
+            _context.Update<Note>(inputNote);
+            _context.SaveChanges();
+
+            var userHasNotes = _context.UserHasNote.Where(u => u.IdUser == id).ToList();
+            List<NoteDto> noteDtos = new List<NoteDto>();
+            foreach (var userHasNote in userHasNotes)
+            {
+                Note note = _context.Note.First(p => p.IdNote == userHasNote.IdNote);
+                noteDtos.Add(new NoteDto
+                {
+                    Id = note.IdNote,
+                    Header = note.Header,
+                    Description = note.Description,
+                    IsFavorites = note.IsFavorites,
+                    ImagePath = note.ImagePath
+                });
+            }
+            
+            return Ok(new NotesDto{Data = noteDtos.ToArray()});
+        }
 
         /*// GET: api/Notes/5
         [HttpGet("{id}")]

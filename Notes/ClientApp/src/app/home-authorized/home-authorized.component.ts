@@ -9,6 +9,7 @@ import {DialogElementsAddNoteComponent} from "../dialog-elements-add-note/dialog
 import {DialogElementsCategorySettingsComponent} from "../dialog-elements-category-settings/dialog-elements-category-settings.component";
 import {Notes} from "../_models/notes.model";
 import {Router} from "@angular/router";
+import {Note} from "../_models/note.model";
 
 @Component({
   selector: 'app-home-authorized',
@@ -29,12 +30,15 @@ export class HomeAuthorizedComponent implements OnInit {
     this.getMainNotes();
   }
 
-  changeFavoritesState() {
-    if (this.favoritesPath === "assets/images/star1.png") {
+  changeFavoritesState(note: Note) {
+    this.dataService.getData("/notes/", "changeFavoritesState", note)
+      .subscribe((data: Notes) => this.notes = data);
+
+    /*if (this.favoritesPath === "assets/images/star1.png") {
       this.favoritesPath = "assets/images/star11.png";
     } else {
       this.favoritesPath = "assets/images/star1.png";
-    }
+    }*/
   }
 
   private getNoteCategories() {

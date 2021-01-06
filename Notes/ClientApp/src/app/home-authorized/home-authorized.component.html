@@ -20,8 +20,12 @@
       <div class="border-top">
         <a class="clickableImage"><img class="m-2" src="assets/images/edit.png" width="20" height="20"></a>
         <a class="clickableImage" (click)="deleteCurrentNote(note.id)"><img class="m-2" src="assets/images/delete.png" width="20" height="20"></a>
-        <a *ngIf="note.isFavorites" class="clickableImage"><img class="m-2" src="assets/images/star11.png" width="20" height="20"></a>
-        <a *ngIf="!note.isFavorites" class="clickableImage"><img class="m-2" src="assets/images/star1.png" width="20" height="20"></a>
+        <a *ngIf="note.isFavorites" class="clickableImage" (click)="changeFavoritesState(note)">
+          <img class="m-2" src="assets/images/star11.png" width="20" height="20" onclick="this.src='assets/images/star1.png'">
+        </a>
+        <a *ngIf="!note.isFavorites" class="clickableImage" (click)="changeFavoritesState(note)">
+          <img class="m-2" src="assets/images/star1.png" width="20" height="20" onclick="this.src='assets/images/star11.png'">
+        </a>
       </div>
     </div>
   </div>
